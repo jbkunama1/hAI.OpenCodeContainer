@@ -1,6 +1,6 @@
 services:
   dev:
-    image: ghcr.io/jbkunama1/hAI.OpenCodeContainer:latest
+    image: ghcr.io/jbkunama1/hai.opencodcontainer:latest
     pull_policy: always
     container_name: coding-gui
     stdin_open: true
