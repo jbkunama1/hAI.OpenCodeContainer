@@ -1,0 +1,27 @@
+services:
+  dev:
+    image: ghcr.io/jbkunama1/hAI.OpenCodeContainer:latest
+    pull_policy: always
+    container_name: coding-gui
+    stdin_open: true
+    tty: true
+
+    environment:
+      PASSWORD: "${CODE_PASSWORD}"
+      TZ: "Europe/Berlin"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
+      GH_TOKEN: "${GH_TOKEN:-}"
+
+    volumes:
+      - "./projects:/home/coder/project"
+      - "coder-home:/home/coder"
+
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    restart: "unless-stopped"
+
+volumes:
+  coder-home: {}
