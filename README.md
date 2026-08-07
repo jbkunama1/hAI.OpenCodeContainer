@@ -55,6 +55,32 @@ volumes:
 | `OPENROUTER_API_KEY`   | nein    | OpenRouter für OpenCode        |
 | `GH_TOKEN`             | nein    | GitHub-Auth für `gh` (optional)|
 
+## Auto-Updates (neu gebaut -> Neustart)
+
+Der Stack nutzt `pull_policy: always`, d. h. bei jedem Redeploy zieht
+Portainer das neueste `ghcr.io/.../hAI.OpenCodeContainer:latest`.
+
+**Automatisch nach jedem GHCR-Push (empfohlen):**
+
+1. Im Stack in Portainer: **Stack settings** -> **Poll for updates** aktivieren
+   und bei **Webhook** die angezeigte URL kopieren.
+2. In diesem Repo unter **Settings → Webhooks** einen Webhook anlegen:
+   - **Payload URL**: die kopierte Portainer-Webhook-URL
+   - **Content type**: `application/json`
+   - **Events**: **Package published** (GHCR) — oder, falls der Webhook
+     separat eingerichtet wird, einmal pro `push`.
+3. Bei jedem GHCR-Update ruft GitHub die URL auf, Portainer pullt das neue
+   Image und stellt den Stack neu.
+
+**Alternative: Watchtower** (kein GitHub-Trigger nötig)
+
+```bash
+docker run -d --name watchtower \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  containrrr/watchtower:latest \
+  --interval 3600 --cleanup
+```
+
 ## Zugriff
 
 Per SSH-Tunnel:
