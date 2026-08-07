@@ -61,6 +61,12 @@ services:
       - "8833:8080"
 
     restart: "unless-stopped"
+    networks:
+      - highfishNetwork
+
+networks:
+  highfishNetwork:
+    external: true
 
 volumes:
   coder-home: {}
