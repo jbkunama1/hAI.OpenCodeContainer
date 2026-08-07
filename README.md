@@ -38,19 +38,28 @@ verbunden.
 ```yaml
 services:
   dev:
-    image: ghcr.io/jbkunama1/hAI.OpenCodeContainer:latest
+    image: ghcr.io/jbkunama1/hai.opencodcontainer:latest
+    pull_policy: always
+    container_name: coding-gui
+    stdin_open: true
+    tty: true
+
     environment:
       PASSWORD: "${CODE_PASSWORD}"
+      TZ: "Europe/Berlin"
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
       ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
       OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
       OPENAI_BASE_URL: "${OPENAI_BASE_URL:-}"
       GH_TOKEN: "${GH_TOKEN:-}"
+
     volumes:
       - "./projects:/home/coder/project"
       - "coder-home:/home/coder"
+
     ports:
       - "8833:8080"
+
     restart: "unless-stopped"
 
 volumes:
