@@ -12,6 +12,7 @@ services:
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
       ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
       OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
+      OPENAI_BASE_URL: "${OPENAI_BASE_URL:-}"
       GH_TOKEN: "${GH_TOKEN:-}"
 
     volumes:
@@ -19,7 +20,7 @@ services:
       - "coder-home:/home/coder"
 
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8833:8080"
 
     restart: "unless-stopped"
 

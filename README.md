@@ -44,12 +44,13 @@ services:
       OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
       ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
       OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
+      OPENAI_BASE_URL: "${OPENAI_BASE_URL:-}"
       GH_TOKEN: "${GH_TOKEN:-}"
     volumes:
       - "./projects:/home/coder/project"
       - "coder-home:/home/coder"
     ports:
-      - "127.0.0.1:8080:8080"
+      - "8833:8080"
     restart: "unless-stopped"
 
 volumes:
@@ -72,6 +73,7 @@ volumes:
 | `OPENAI_API_KEY`       | nein    | OpenAI für OpenCode            |
 | `ANTHROPIC_API_KEY`    | nein    | Anthropic für OpenCode         |
 | `OPENROUTER_API_KEY`   | nein    | OpenRouter für OpenCode        |
+| `OPENAI_BASE_URL`      | nein    | Basis-URL für OpenAI-kompatible APIs (z. B. lokaler LLM-Server oder anderer Provider) |
 | `GH_TOKEN`             | nein    | GitHub-Auth für `gh` (optional)|
 
 ## Auto-Updates (neu gebaut -> Neustart)
@@ -105,9 +107,9 @@ docker run -d --name watchtower \
 Per SSH-Tunnel:
 
 ```bash
-ssh -L 8080:127.0.0.1:8080 dietpi@DEINE-DIETPI-IP
+ssh -L 8833:127.0.0.1:8833 dietpi@DEINE-DIETPI-IP
 ```
-Browser: `http://localhost:8080` — Passwort = `CODE_PASSWORD`.
+Browser: `http://localhost:8833` — Passwort = `CODE_PASSWORD`.
 
 ## GitHub & OpenCode im Container
 
