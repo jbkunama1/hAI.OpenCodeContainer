@@ -1,6 +1,25 @@
-# hAI.OpenCodeContainer
+# 💻 hAI.OpenCodeContainer
 
-DietPi x86_64 – OpenCode + code-server + Git + GitHub CLI als Docker-Container.
+<div align="center">
+
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com)
+[![DietPi](https://img.shields.io/badge/DietPi-00AEEF?style=for-the-badge)](https://dietpi.com)
+[![OpenCode](https://img.shields.io/badge/OpenCode-KI--Agent-6a0dad?style=for-the-badge)](https://opencode.ai)
+[![License: MIT](https://img.shields.io/badge/Lizenz-MIT-green?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+
+[![Stack](https://img.shields.io/badge/🧱_Stack-Portainer-blue?style=flat-square)](https://www.portainer.io)
+[![Update](https://img.shields.io/badge/🔄_Update-automatisch-teal?style=flat-square)](https://github.com/jbkunama1/hAI.OpenCodeContainer)
+[![Self-Hosted](https://img.shields.io/badge/🏠_Self--Hosted-DietPi-green?style=flat-square)](https://dietpi.com)
+
+**DietPi x86_64 – OpenCode + code-server + Git + GitHub CLI als Docker-Container.**
+
+<a href="https://www.buymeacoffee.com/highfish">
+<img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
+</a>
+
+</div>
+
+---
 
 Das Image wird automatisch per **GitHub Actions** gebaut und auf **GHCR**
 (`ghcr.io/jbkunama1/hAI.OpenCodeContainer:latest`) gepusht. Per Portainer
