@@ -51,6 +51,7 @@ services:
       ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
       OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
       OPENAI_BASE_URL: "${OPENAI_BASE_URL:-}"
+      MCP_SERVER_API_KEY: "${MCP_SERVER_API_KEY:-}"
       GH_TOKEN: "${GH_TOKEN:-}"
 
     volumes:
@@ -63,6 +64,7 @@ services:
     restart: "unless-stopped"
     networks:
       - highfishNetwork
+    user: "${UID_GID:-1000:1000}"
 
 networks:
   highfishNetwork:
@@ -84,6 +86,7 @@ volumes:
 
 | Variable               | Pflicht | Zweck                          |
 |------------------------|---------|--------------------------------|
+| `MCP_SERVER_API_KEY`  | nein    | API-Key für MCP-Server beim Starten des Containers |
 | `CODE_PASSWORD`        | ja      | code-server-Loginpasswort      |
 | `OPENAI_API_KEY`       | nein    | OpenAI für OpenCode            |
 | `ANTHROPIC_API_KEY`    | nein    | Anthropic für OpenCode         |
