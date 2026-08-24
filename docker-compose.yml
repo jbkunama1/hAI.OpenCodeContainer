@@ -13,27 +13,7 @@ services:
       - OPENCODE_SERVER_PASSWORD=${OPENCODE_SERVER_PASSWORD}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LOCAL_ENDPOINT=${LOCAL_ENDPOINT}
-      - OPENCODE_CONFIG_CONTENT={
-        "$schema": "https://opencode.ai/config.json",
-        "server": { "port": 4096, "hostname": "0.0.0.0" },
-        "provider": {
-          "openai": {
-            "options": {
-              "apiKey": "${OPENAI_API_KEY}",
-              "baseURL": "${LOCAL_ENDPOINT}"
-            }
-          }
-        },
-        "enabled_providers": ["openai"],
-        "snapshot": false,
-        "autoupdate": false,
-        "mcp": {
-          "github": {
-            "enabled": true,
-            "repositories": ["jbkunama1/*"]
-          }
-        }
-      }
+      - OPENCODE_CONFIG_CONTENT={"$schema":"https://opencode.ai/config.json","server":{"port":4096,"hostname":"0.0.0.0"},"provider":{"openai":{"options":{"apiKey":"${OPENAI_API_KEY}","baseURL":"${LOCAL_ENDPOINT}"}}},"enabled_providers":["openai"],"snapshot":false,"autoupdate":false,"mcp":{"github":{"enabled":true,"repositories":["jbkunama1/*"]}}}
     volumes:
       - ${OPENCODE_DATA_DIR:-~/opencode/data}:/root/.local/share/opencode
       - ${OPENCODE_PROJECTS_DIR:-~/opencode/projects}:/workspace
