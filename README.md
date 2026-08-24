@@ -1,6 +1,18 @@
 # hAI.OpenCodeContainer
 
-Docker Compose Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Editor.
+Docker Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Editor mit Auto-Build via GitHub Actions.
+
+## 🏗️ Architektur
+
+```
+git push origin master
+        ↓
+GitHub Actions: Build & Push → ghcr.io/jbkunama1/hai.opencodecontainer
+        ↓
+Portainer: Stack Update (re-pullt latest)
+        ↓
+Container läuft ✓
+```
 
 ## 🚀 Quick Start mit Portainer
 
@@ -10,7 +22,20 @@ Docker Compose Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Edit
 docker network create highfishNetwork
 ```
 
-### 2. In Portainer deployen
+### 2. GHCR Registry in Portainer einrichten
+
+Das Image wird von GitHub Container Registry gepullt:
+
+**Option A: Image public machen (empfohlen)**
+- GitHub → Packages → `hai.opencodecontainer` → Package Settings → Change visibility → Public
+
+**Option B: Private mit Auth**
+- Portainer → Registries → Add registry
+- Registry: `ghcr.io`
+- Username: `jbkunama1`
+- Password: GitHub PAT mit `read:packages` Scope
+
+### 3. Stack deployen
 
 1. **Stacks** → **Add stack**
 2. **Name:** `opencode`
@@ -20,37 +45,39 @@ docker network create highfishNetwork
 6. **Environment Variables** eintragen (siehe unten)
 7. **Deploy the stack** ✓
 
-### 3. Environment Variables
+### 4. Environment Variables (Pflicht)
 
 | Variable | Beispiel | Beschreibung |
 |----------|----------|--------------|
-| `OPENCODE_PORT` | `4096` | Externer Port |
-| `TZ` | `Europe/Berlin` | Zeitzone |
 | `OPENCODE_SERVER_PASSWORD` | `DeinPasswort123!` | Login-Passwort |
 | `OPENAI_API_KEY` | `sk-xxxxxxxx` | OpenAI-kompatibler API Key |
 | `LOCAL_ENDPOINT` | `https://api.example.com/v1` | API Endpoint URL |
-| `OPENCODE_DATA_DIR` | `/home/user/opencode/data` | Daten-Verzeichnis |
-| `OPENCODE_PROJECTS_DIR` | `/home/user/opencode/projects` | Projekt-Verzeichnis |
 
-## 🏗️ Architektur
+### 5. Environment Variables (Optional)
 
-```
-┌─────────────────────────────────────────┐
-│         opencode Container              │
-│  (ghcr.io/opencode-ai/opencode:latest)  │
-├─────────────────────────────────────────┤
-│  Port: 4096 (Web UI)                    │
-│  Network: highfishNetwork               │
-│  Volumes:                               │
-│    - ~/opencode/data (Config)           │
-│    - ~/opencode/projects (Workspace)    │
-└─────────────────────────────────────────┘
-```
+| Variable | Default | Beschreibung |
+|----------|---------|--------------|
+| `OPENCODE_PORT` | `4096` | Externer Port |
+| `TZ` | `Europe/Berlin` | Zeitzone |
+| `OPENCODE_DATA_DIR` | `~/opencode/data` | Daten-Verzeichnis |
+| `OPENCODE_PROJECTS_DIR` | `~/opencode/projects` | Projekt-Verzeichnis |
+
+## 🔄 Auto-Build Workflow
+
+Bei jedem Push auf `master`/`main`:
+
+1. GitHub Actions baut das Docker Image aus dem `Dockerfile`
+2. Push zu `ghcr.io/jbkunama1/hai.opencodecontainer:latest`
+3. Tags: `latest`, `master`, `<commit-sha>`
+
+**Update in Portainer:** Stack → Editor → "Re-pull image and redeploy"
 
 ## 🔧 Features
 
 - ✅ OpenAI-kompatible API Integration
 - ✅ GitHub MCP Support (jbkunama1/*)
+- ✅ Auto-Build via GitHub Actions
+- ✅ GHCR Image Registry
 - ✅ Portainer-ready (Environment Variables)
 - ✅ highfishNetwork Integration
 - ✅ Persistent Data Storage
@@ -58,7 +85,7 @@ docker network create highfishNetwork
 ## 📝 Notes
 
 - **Secrets** niemals ins Repo committen!
-- Nur über Portainer UI als Environment Variables setzen
+- Env Vars nur über Portainer UI setzen
 - Bei Updates bleiben Secrets erhalten
 
 ## 🦈 Network
@@ -68,3 +95,4 @@ Das Setup nutzt das externe Docker-Netzwerk `highfishNetwork`.
 ---
 
 **Repository:** https://github.com/jbkunama1/hAI.OpenCodeContainer
+**Image:** https://github.com/jbkunama1/hAI.OpenCodeContainer/pkgs/container/hai.opencodecontainer
