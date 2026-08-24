@@ -1,165 +1,139 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="light">
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>hAI.OpenCodeContainer</title>
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet">
-  <style>
-    :root, [data-theme="light"] {
-      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
-      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
-      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
-      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
-      --space-1: .25rem; --space-2: .5rem; --space-3: .75rem; --space-4: 1rem;
-      --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem; --space-16: 4rem;
-      --color-bg:#f7f6f2; --color-surface:#f9f8f5; --color-surface-2:#fbfbf9; --color-surface-offset:#edeae5;
-      --color-border:#d4d1ca; --color-text:#28251d; --color-text-muted:#66645f; --color-text-faint:#96938d;
-      --color-primary:#01696f; --color-primary-hover:#0c4e54;
-      --color-blue:#006494; --color-gold:#d19900; --color-success:#437a22;
-      --radius-sm:.375rem; --radius-md:.5rem; --radius-lg:.75rem; --radius-xl:1rem; --radius-full:9999px;
-      --shadow-sm:0 1px 2px rgba(0,0,0,.06); --shadow-card:0 8px 24px rgba(0,0,0,.10);
-      --font-body:'Satoshi', system-ui, sans-serif; --font-display:'Cabinet Grotesk', system-ui, sans-serif;
-    }
-    [data-theme="dark"] {
-      --color-bg:#171614; --color-surface:#1c1b19; --color-surface-2:#201f1d; --color-surface-offset:#2a2825;
-      --color-border:#393836; --color-text:#e5e2da; --color-text-muted:#b5b1a7; --color-text-faint:#8b877e;
-      --color-primary:#4f98a3; --color-primary-hover:#6bb4bf;
-      --color-blue:#73addd; --color-green:#8cc067;
-      --shadow-sm:0 1px 2px rgba(0,0,0,.2); --shadow-card:0 12px 32px rgba(0,0,0,.42);
-    }
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body { margin:0; font-family:var(--font-body); font-size:var(--text-base); line-height:1.6; color:var(--color-text); background:linear-gradient(180deg,var(--color-bg),var(--color-surface)); }
-    a { color:var(--color-primary); }
-    .skip-link{position:absolute;left:-9999px;top:auto}.skip-link:focus{left:1rem;top:1rem;background:var(--color-surface);padding:.5rem 1rem;z-index:999}
-    .theme-toggle{position:fixed;top:1rem;right:1rem;z-index:100;cursor:pointer;background:var(--color-surface-2);border:1px solid var(--color-border);color:var(--color-text);min-height:44px;min-width:44px;border-radius:999px;font-size:1.1rem}
-    .nav{max-width:1200px;margin-top:1rem;padding:var(--space-3) var(--space-4);display:flex;align-items:center;gap:var(--space-4)}
-    .brand{display:inline-flex;align-items:center;gap:.75rem;text-decoration:none;color:inherit;font-weight:700;font-family:var(--font-display);font-size:var(--text-lg)}
-    .brand-logo{width:40px;height:40px;border-radius:12px;background:radial-gradient(circle at 30% 20%,#bbf7d0 0,#4ade80 30%,#22c55e 50%,#166534 100%);display:inline-flex;align-items:center;justify-content:center;color:#022c22;font-weight:900;font-family:var(--font-display)}
-    main{max-width:1200px;margin:0 auto;padding:var(--space-8) var(--space-4) var(--space-16)}
-    .hero{display:grid;grid-template-columns:1.3fr .9fr;gap:var(--space-8);align-items:center;padding:var(--space-10) 0 var(--space-8)}
-    .eyebrow{display:inline-flex;gap:.5rem;align-items:center;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:999px;padding:.4rem .75rem;font-size:var(--text-sm);color:var(--color-text-muted)}
-    h1,h2,h3{font-family:var(--font-display);line-height:1.08;margin:0 0 .75rem}
-    h1{font-size:var(--text-2xl)} h2{font-size:var(--text-xl);margin-top:0} h3{font-size:var(--text-lg)}
-    p{max-width:72ch}
-    .lede{font-size:var(--text-lg);color:var(--color-text-muted)}
-    .hero-card,.card,.note{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-card)}
-    .hero-card{padding:var(--space-6)}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-top:var(--space-5)}
-    .stat{background:var(--color-surface-2);border:1px solid var(--color-border);padding:var(--space-4);border-radius:var(--radius-lg)}
-    .stat b{display:block;font-family:var(--font-display);font-size:var(--text-lg)}
-    .stat span{font-size:var(--text-sm);color:var(--color-text-muted)}
-    .section{padding:var(--space-8) 0;border-top:1px solid var(--color-border)}
-    .grid-2,.grid-3{display:grid;gap:var(--space-4)}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .card{padding:var(--space-5)}
-    .card h3{display:flex;align-items:center;gap:.4rem}
-    .card ul{list-style:none;margin:.5rem 0 0;padding:0;display:grid;gap:.25rem;font-size:var(--text-sm);color:var(--color-text-muted)}
-    .card ul li::before{content:"•";margin-right:.4rem;color:var(--color-primary)}
-    .pill{display:inline-block;padding:.3rem .6rem;border-radius:999px;background:color-mix(in srgb, var(--color-primary) 12%, var(--color-surface));color:var(--color-primary);font-size:var(--text-sm)}
-    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;font-size:var(--text-sm);background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:.2rem .4rem}
-    pre.code{display:block;overflow-x:auto;padding:var(--space-4);line-height:1.5;margin:var(--space-4) 0}
-    table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
-    th,td{text-align:left;padding:.6rem .75rem;border-bottom:1px solid var(--color-border)}
-    th{font-family:var(--font-display)}
-    footer{border-top:1px solid var(--color-border);padding:var(--space-6) var(--space-4);max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:var(--space-4);font-size:var(--text-sm);color:var(--color-text-muted);flex-wrap:wrap}
-    @media(max-width:860px){.hero{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hAI.OpenCodeContainer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        .info-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .info-box h2 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        .info-box p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .code {
+            background: rgba(0,0,0,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+        .links {
+            margin-top: 2rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Zum Inhalt springen</a>
-  <button class="theme-toggle" id="themeToggle" aria-label="Theme umschalten">🌙</button>
-  <nav>
-    <a class="brand" href="#top"><span class="brand-logo">OC</span> hAI.OpenCodeContainer</a>
-  </nav>
-  <main id="main">
-    <section class="hero">
-      <div>
-        <span class="eyebrow">🟢 self-hosted &nbsp;·&nbsp; GHCR</span>
-        <h1>DietPi · OpenCode · code-server</h1>
-        <p class="lede">DietPi x86_64 – OpenCode + code-server + Git + GitHub CLI als Docker-Container. Das Image wird automatisch per GitHub Actions gebaut und auf GHCR gepusht.</p>
-        <div class="pill">ghcr.io/jbkunama1/hAI.OpenCodeContainer:latest</div>
-      </div>
-      <div class="hero-card">
-        <h3>⚙️ Quickstart</h3>
-        <p>Per Portainer Stack pullen – nicht lokal bauen.</p>
-        <div class="stats">
-          <div class="stat"><b>1-Stack</b><span>Portainer</span></div>
-          <div class="stat"><b>8080</b><span>Port</span></div>
-          <div class="stat"><b>auto</b><span>Updates</span></div>
+    <div class="container">
+        <h1>🦈 hAI.OpenCodeContainer</h1>
+        <p class="subtitle">Docker Compose Setup für OpenCode</p>
+        
+        <div class="info-box">
+            <h2>🚀 Quick Start</h2>
+            <p>Deploy mit Portainer in wenigen Schritten:</p>
+            <div class="code">docker network create highfishNetwork</div>
+            <p>Dann in Portainer als Stack deployen mit Environment Variables.</p>
         </div>
-      </div>
-    </section>
 
-    <section class="section">
-      <h2>📁 Deployment per Portainer Stack</h2>
-      <ol>
-        <li><b>Stacks → Add stack</b></li>
-        <li><b>Name</b>: z.&nbsp;B. <code class="code">opencode</code></li>
-        <li><b>Build method</b>: Web editor mit Inhalt aus <code class="code">compose.yml</code>:</li>
-      </ol>
-<pre class="code">services:
-  dev:
-    image: ghcr.io/jbkunama1/hAI.OpenCodeContainer:latest
-    environment:
-      PASSWORD: "${CODE_PASSWORD}"
-      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
-      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
-      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
-      GH_TOKEN: "${GH_TOKEN:-}"
-    volumes:
-      - "./projects:/home/coder/project"
-      - "coder-home:/home/coder"
-    ports:
-      - "127.0.0.1:8080:8080"
-    restart: "unless-stopped"
-volumes:
-  coder-home: {}</pre>
-      <p style="font-size:var(--text-sm);color:var(--color-text-muted)">Registry-Zugriff: public Image → <code class="code">latest</code> ohne Credentials. Privat → GHCR-Registry in Portainer mit PAT (Scope <code class="code">read:packages</code>).</p>
-    </section>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered</h3>
+                <p>OpenAI-kompatible API</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🐙</div>
+                <h3>GitHub MCP</h3>
+                <p>Repository Integration</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🐳</div>
+                <h3>Docker</h3>
+                <p>Container-basiert</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🦈</div>
+                <h3>highfishNetwork</h3>
+                <p>Isoliertes Netzwerk</p>
+            </div>
+        </div>
 
-    <section class="section">
-      <h2>🔐 Environment</h2>
-      <table>
-        <thead><tr><th>Variable</th><th>Pflicht</th><th>Zweck</th></tr></thead>
-        <tbody>
-          <tr><td><code class="code">CODE_PASSWORD</code></td><td>ja</td><td>code-server-Loginpasswort</td></tr>
-          <tr><td><code class="code">OPENAI_API_KEY</code></td><td>nein</td><td>OpenAI für OpenCode</td></tr>
-          <tr><td><code class="code">ANTHROPIC_API_KEY</code></td><td>nein</td><td>Anthropic für OpenCode</td></tr>
-          <tr><td><code class="code">OPENROUTER_API_KEY</code></td><td>nein</td><td>OpenRouter für OpenCode</td></tr>
-          <tr><td><code class="code">GH_TOKEN</code></td><td>nein</td><td>GitHub-Auth für <code class="code">gh</code> (optional)</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section class="section">
-      <h2>🔄 Auto-Updates</h2>
-      <div class="grid-3">
-        <div class="card"><h3>🔄 Poll for Updates</h3><p style="font-size:var(--text-sm)">Webhook aus Portainer unter <i>Stack settings → Poll for updates</i> kopieren und im Repo unter <i>Settings → Webhooks</i> anlegen (Event <b>Package published</b>).</p></div>
-        <div class="card"><h3>🔭 Watchtower</h3><p style="font-size:var(--text-sm)">Kein GitHub-Trigger nötig:</p>
-<pre class="code">docker run -d --name watchtower \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  containrrr/watchtower:latest \
-  --interval 3600 --cleanup</pre></div>
-        <div class="card"><h3>🚀 Zugriff</h3><p style="font-size:var(--text-sm)">Per SSH-Tunnel:</p>
-<pre class="code">ssh -L 8080:127.0.0.1:8080 dietpi@DEINE-DIETPI-IP</pre>
-<p style="font-size:var(--text-sm)">Browser: <b>http://localhost:8080</b></p></div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-      <span>DietPi · OpenCode · code-server</span>
-      <span><a href="https://github.com/jbkunama1/hAI.OpenCodeContainer">GitHub</a> &nbsp;·&nbsp; Made with ❤️ &amp; ⚙️</span>
-  </footer>
-
-  <script>
-    const toggle=document.getElementById('themeToggle');
-    const setTheme=t=>{document.documentElement.dataset.theme=t;toggle.textContent=t==='dark'?'☀️':'🌙'};
-    setTheme(localStorage.getItem('theme')||'light');
-    toggle.addEventListener('click',()=>{setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');localStorage.setItem('theme',document.documentElement.dataset.theme)});
-  </script>
+        <div class="links">
+            <a href="https://github.com/jbkunama1/hAI.OpenCodeContainer" class="btn">📦 GitHub Repo</a>
+            <a href="https://opencode.ai" class="btn">📖 OpenCode Docs</a>
+        </div>
+    </div>
 </body>
 </html>
