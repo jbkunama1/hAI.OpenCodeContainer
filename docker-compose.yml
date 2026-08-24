@@ -5,7 +5,7 @@ services:
     image: ghcr.io/jbkunama1/hai.opencodecontainer:latest
     container_name: opencode
     restart: unless-stopped
-    command: sh -c "opencode web"
+    command: sh -c "opencode web --port 4096 --hostname 0.0.0.0"
     ports:
       - "${OPENCODE_PORT:-4096}:4096"
     environment:
