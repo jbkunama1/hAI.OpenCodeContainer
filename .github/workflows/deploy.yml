@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Push
 
 on:
   push:
@@ -54,25 +54,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  deploy:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    
-    steps:
-      - name: Deploy to Portainer
-        uses: portainer/portainer-stack-deploy@v1
-        with:
-          portainer-url: ${{ secrets.PORTAINER_URL }}
-          portainer-api-key: ${{ secrets.PORTAINER_API_KEY }}
-          stack-name: opencode
-          stack-definition: docker-compose.yml
-          repository-url: https://github.com/${{ github.repository }}.git
-          repository-branch: ${{ github.ref_name }}
-          env: |
-            OPENCODE_SERVER_PASSWORD=${{ secrets.OPENCODE_SERVER_PASSWORD }}
-            OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-            LOCAL_ENDPOINT=${{ secrets.LOCAL_ENDPOINT }}
-            OPENCODE_PORT=4096
-            TZ=Europe/Berlin
