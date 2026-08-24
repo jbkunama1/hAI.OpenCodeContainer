@@ -58,6 +58,24 @@
             font-family: 'Courier New', monospace;
             display: inline-block;
             margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        .flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .flow-step {
+            background: rgba(0,0,0,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .flow-arrow {
+            font-size: 1.2rem;
         }
         .links {
             margin-top: 2rem;
@@ -98,13 +116,27 @@
 <body>
     <div class="container">
         <h1>🦈 hAI.OpenCodeContainer</h1>
-        <p class="subtitle">Docker Compose Setup für OpenCode</p>
+        <p class="subtitle">Docker Setup für OpenCode mit Auto-Build</p>
         
         <div class="info-box">
+            <h2>🔄 Auto-Build Pipeline</h2>
+            <div class="flow">
+                <span class="flow-step">git push</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">GitHub Actions</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">GHCR</span>
+                <span class="flow-arrow">→</span>
+                <span class="flow-step">Portainer</span>
+            </div>
+            <p>Bei jedem Push auf master wird das Image automatisch gebaut und zu GHCR gepusht.</p>
+        </div>
+
+        <div class="info-box">
             <h2>🚀 Quick Start</h2>
-            <p>Deploy mit Portainer in wenigen Schritten:</p>
             <div class="code">docker network create highfishNetwork</div>
             <p>Dann in Portainer als Stack deployen mit Environment Variables.</p>
+            <div class="code">ghcr.io/jbkunama1/hai.opencodecontainer:latest</div>
         </div>
 
         <div class="features">
@@ -119,9 +151,19 @@
                 <p>Repository Integration</p>
             </div>
             <div class="feature">
+                <div class="feature-icon">⚙️</div>
+                <h3>Auto-Build</h3>
+                <p>GitHub Actions CI/CD</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📦</div>
+                <h3>GHCR</h3>
+                <p>Container Registry</p>
+            </div>
+            <div class="feature">
                 <div class="feature-icon">🐳</div>
-                <h3>Docker</h3>
-                <p>Container-basiert</p>
+                <h3>Portainer</h3>
+                <p>Stack Deployment</p>
             </div>
             <div class="feature">
                 <div class="feature-icon">🦈</div>
@@ -132,6 +174,7 @@
 
         <div class="links">
             <a href="https://github.com/jbkunama1/hAI.OpenCodeContainer" class="btn">📦 GitHub Repo</a>
+            <a href="https://github.com/jbkunama1/hAI.OpenCodeContainer/pkgs/container/hai.opencodecontainer" class="btn">🐳 Container Image</a>
             <a href="https://opencode.ai" class="btn">📖 OpenCode Docs</a>
         </div>
     </div>
