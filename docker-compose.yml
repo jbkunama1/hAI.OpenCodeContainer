@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   opencode:
-    build: .
+    image: ghcr.io/jbkunama1/hai.opencodecontainer:latest
     container_name: opencode
     restart: unless-stopped
     command: sh -c "opencode web"
