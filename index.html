@@ -77,6 +77,27 @@
         .flow-arrow {
             font-size: 1.2rem;
         }
+        .login-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .login-item {
+            background: rgba(0,0,0,0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+        }
+        .login-item .label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.25rem;
+        }
+        .login-item .value {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
         .links {
             margin-top: 2rem;
         }
@@ -133,6 +154,20 @@
         </div>
 
         <div class="info-box">
+            <h2>🔐 Login</h2>
+            <div class="login-info">
+                <div class="login-item">
+                    <div class="label">Username</div>
+                    <div class="value">opencode</div>
+                </div>
+                <div class="login-item">
+                    <div class="label">Password</div>
+                    <div class="value">OPENCODE_SERVER_PASSWORD</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
             <h2>🚀 Quick Start</h2>
             <div class="code">docker network create highfishNetwork</div>
             <p>Dann in Portainer als Stack deployen mit Environment Variables.</p>
@@ -161,9 +196,9 @@
                 <p>Container Registry</p>
             </div>
             <div class="feature">
-                <div class="feature-icon">🐳</div>
-                <h3>Portainer</h3>
-                <p>Stack Deployment</p>
+                <div class="feature-icon">🔐</div>
+                <h3>Basic Auth</h3>
+                <p>Username + Password</p>
             </div>
             <div class="feature">
                 <div class="feature-icon">🦈</div>
