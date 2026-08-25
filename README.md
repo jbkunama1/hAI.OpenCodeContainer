@@ -57,10 +57,20 @@ Das Image wird von GitHub Container Registry gepullt:
 
 | Variable | Default | Beschreibung |
 |----------|---------|--------------|
+| `OPENCODE_SERVER_USERNAME` | `opencode` | Login-Username |
 | `OPENCODE_PORT` | `4096` | Externer Port |
 | `TZ` | `Europe/Berlin` | Zeitzone |
 | `OPENCODE_DATA_DIR` | `~/opencode/data` | Daten-Verzeichnis |
 | `OPENCODE_PROJECTS_DIR` | `~/opencode/projects` | Projekt-Verzeichnis |
+
+## 🔐 Login
+
+Nach dem Deploy unter `http://<server-ip>:4096` erreichbar:
+
+| Feld | Wert |
+|------|------|
+| **Username** | `opencode` (oder dein `OPENCODE_SERVER_USERNAME`) |
+| **Password** | Dein `OPENCODE_SERVER_PASSWORD` |
 
 ## 🔄 Auto-Build Workflow
 
@@ -72,6 +82,15 @@ Bei jedem Push auf `master`/`main`:
 
 **Update in Portainer:** Stack → Editor → "Re-pull image and redeploy"
 
+## 🩺 Troubleshooting
+
+| Problem | Ursache | Lösung |
+|---------|---------|--------|
+| `xdg-open` Crash | Container hat keinen Browser | Bereits gefixt (Fake-Script im Image) |
+| `unhealthy` + 401 | Healthcheck mit Auth | Bereits gefixt (akzeptiert 401) |
+| Nicht erreichbar | Server bindet auf 127.0.0.1 | Bereits gefixt (`--hostname 0.0.0.0`) |
+| GHCR pull denied | Image ist private | Public machen oder Registry-Auth in Portainer |
+
 ## 🔧 Features
 
 - ✅ OpenAI-kompatible API Integration
@@ -79,6 +98,7 @@ Bei jedem Push auf `master`/`main`:
 - ✅ Auto-Build via GitHub Actions
 - ✅ GHCR Image Registry
 - ✅ Portainer-ready (Environment Variables)
+- ✅ Basic Auth (Username/Password)
 - ✅ highfishNetwork Integration
 - ✅ Persistent Data Storage
 
