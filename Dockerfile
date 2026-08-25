@@ -18,9 +18,9 @@ WORKDIR /workspace
 # Expose port
 EXPOSE 4096
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:4096/health || exit 1
+# Health check: any HTTP response (incl. 401 auth-required) means the server is up
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD curl -s -o /dev/null http://localhost:4096/ || exit 1
 
 # Start command
 CMD ["sh", "-c", "opencode web --port 4096 --hostname 0.0.0.0"]
