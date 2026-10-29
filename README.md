@@ -1,6 +1,6 @@
 # hAI.OpenCodeContainer
 
-Docker Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Editor mit Auto-Build via GitHub Actions.
+Docker Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Editor mit Auto-Build via GitHub Actions, Unterstützung für eigene OpenAI-kompatible LLMs und MCP Server.
 
 ## 🏗️ Architektur
 
@@ -11,12 +11,12 @@ GitHub Actions: Build & Push → ghcr.io/jbkunama1/hai.opencodecontainer
         ↓
 Portainer: Stack Update (re-pullt latest)
         ↓
-Container läuft ✓
+Container läuft auf Port 8076 ✓
 ```
 
 ## 🚀 Quick Start mit Portainer
 
-### 1. Docker Netzwerk erstellen
+### 1. Docker Netzwerk erstellen (falls nicht vorhanden)
 
 ```bash
 docker network create highfishNetwork
@@ -41,7 +41,7 @@ Das Image wird von GitHub Container Registry gepullt:
 2. **Name:** `opencode`
 3. **Build method:** Git Repository
 4. **Repository URL:** `https://github.com/jbkunama1/hAI.OpenCodeContainer.git`
-5. **Stack file:** `docker-compose.yml`
+5. **Stack file:** `docker-compose.portainer.yml`
 6. **Environment Variables** eintragen (siehe unten)
 7. **Deploy the stack** ✓
 
@@ -50,22 +50,24 @@ Das Image wird von GitHub Container Registry gepullt:
 | Variable | Beispiel | Beschreibung |
 |----------|----------|--------------|
 | `OPENCODE_SERVER_PASSWORD` | `DeinPasswort123!` | Login-Passwort |
-| `OPENAI_API_KEY` | `sk-xxxxxxxx` | OpenAI-kompatibler API Key |
-| `LOCAL_ENDPOINT` | `https://api.example.com/v1` | API Endpoint URL |
+| `OPENAI_API_KEY` | `sk-xxxxxxxx` | API Key (für OpenAI oder kompatible) |
+| `LOCAL_ENDPOINT` | `http://localhost:8000/v1` | OpenAI-kompatibler API Endpoint |
+| `CUSTOM_OPENAI_ENDPOINT` | `http://localhost:8000/v1` | Zusätzlicher OpenAI-kompatibler Endpoint |
+| `CUSTOM_MCP_ENDPOINT` | `http://localhost:9000` | MCP Server Endpoint |
 
 ### 5. Environment Variables (Optional)
 
 | Variable | Default | Beschreibung |
 |----------|---------|--------------|
 | `OPENCODE_SERVER_USERNAME` | `opencode` | Login-Username |
-| `OPENCODE_PORT` | `4096` | Externer Port |
+| `OPENCODE_PORT` | `8076` | Externer Port |
 | `TZ` | `Europe/Berlin` | Zeitzone |
 | `OPENCODE_DATA_DIR` | `~/opencode/data` | Daten-Verzeichnis |
 | `OPENCODE_PROJECTS_DIR` | `~/opencode/projects` | Projekt-Verzeichnis |
 
 ## 🔐 Login
 
-Nach dem Deploy unter `http://<server-ip>:4096` erreichbar:
+Nach dem Deploy unter `http://<server-ip>:8076` erreichbar:
 
 | Feld | Wert |
 |------|------|
@@ -80,7 +82,29 @@ Bei jedem Push auf `master`/`main`:
 2. Push zu `ghcr.io/jbkunama1/hai.opencodecontainer:latest`
 3. Tags: `latest`, `master`, `<commit-sha>`
 
-**Update in Portainer:** Stack → Editor → "Re-pull image and redeploy"
+**Automatisches Deploy zu Portainer:**
+- Der `portainer-deploy.yml` Workflow automatisch bei Merge auf master/main
+- Updated das Stack mit dem neuen Image und deployt automatisch
+
+## 🚀 GitHub Actions
+
+### Build & Push (manuell oder automatisch)
+- Trigger: Push auf master/main, tags v*, manuell
+- Unterstützt beide Dockerfiles: `Dockerfile` und `Dockerfile.gui`
+- Pusht zu GHCR mit mehreren Tags
+
+### Portainer Deploy (automatisch bei Merge)
+- Trigger: Push auf master/main, manuell
+- Updated Portainer Stack mit neuestem Image
+- Führt Health Check durch
+- Benötigt GitHub Secrets:
+  - `PORTAINER_URL`: Portainer API URL
+  - `PORTAINER_TOKEN`: Portainer API Token
+  - `OPENCODE_SERVER_PASSWORD`: Server Passwort
+  - `OPENAI_API_KEY`: API Key
+  - `LOCAL_ENDPOINT`: OpenAI Endpoint
+  - `CUSTOM_OPENAI_ENDPOINT`: Custom OpenAI Endpoint
+  - `CUSTOM_MCP_ENDPOINT`: Custom MCP Endpoint
 
 ## 🩺 Troubleshooting
 
@@ -90,27 +114,54 @@ Bei jedem Push auf `master`/`main`:
 | `unhealthy` + 401 | Healthcheck mit Auth | Bereits gefixt (akzeptiert 401) |
 | Nicht erreichbar | Server bindet auf 127.0.0.1 | Bereits gefixt (`--hostname 0.0.0.0`) |
 | GHCR pull denied | Image ist private | Public machen oder Registry-Auth in Portainer |
+| Port 8076 belegt | Andere Service nutzt Port | Port ändern oder Service stoppen |
 
 ## 🔧 Features
 
-- ✅ OpenAI-kompatible API Integration
+- ✅ OpenAI-kompatible API Integration (Multi-Endpoint)
 - ✅ GitHub MCP Support (jbkunama1/*)
+- ✅ Eigener OpenAI-kompatibler LLM Support
+- ✅ Eigener MCP Server Support
 - ✅ Auto-Build via GitHub Actions
+- ✅ Auto-Deploy bei Merge
 - ✅ GHCR Image Registry
 - ✅ Portainer-ready (Environment Variables)
 - ✅ Basic Auth (Username/Password)
 - ✅ highfishNetwork Integration
 - ✅ Persistent Data Storage
+- ✅ Health Check & Monitoring
 
 ## 📝 Notes
 
 - **Secrets** niemals ins Repo committen!
 - Env Vars nur über Portainer UI setzen
 - Bei Updates bleiben Secrets erhalten
+- Der Port wurde von 4096 auf 8076 geändert
+- Nutze `docker-compose.portainer.yml` für Portainer Deployment
 
 ## 🦈 Network
 
 Das Setup nutzt das externe Docker-Netzwerk `highfishNetwork`.
+
+## 🔌 Custom Endpoints
+
+### Eigene OpenAI-kompatible LLMs
+Setze die folgenden Environment Variables:
+```bash
+CUSTOM_OPENAI_ENDPOINT=http://localhost:8000/v1
+OPENAI_API_KEY=dein-api-key
+```
+
+### Eigener MCP Server
+```bash
+CUSTOM_MCP_ENDPOINT=http://localhost:9000
+```
+
+### Portainer Secrets Setup
+1. Gehe zu Portainer → Stacks → `opencode` → Environment
+2. Klicke auf "Add environment variable"
+3. Füge die Secrets hinzu (Werte aus GitHub Secrets)
+4. Deploy Stack neu
 
 ---
 

@@ -1,0 +1,91 @@
+name: Deploy to Portainer
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+    inputs:
+      stack_name:
+        description: 'Stack name to deploy'
+        required: true
+        default: 'opencode'
+        type: string
+      environment:
+        description: 'Environment (dev/staging/prod)'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+env:
+  PORTAINER_URL: ${{ secrets.PORTAINER_URL }}
+  PORTAINER_TOKEN: ${{ secrets.PORTAINER_TOKEN }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  deploy-stack:
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'branch' && (github.ref_name == 'master' || github.ref_name == 'main')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get current branch name
+        id: branch-name
+        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
+
+      - name: Update docker-compose with latest image
+        run: |
+          sed -i "s|image: ghcr.io/jbkunama1/hai.opencodecontainer:latest|image: ${REGISTRY}/${IMAGE_NAME}:${{ steps.branch-name.outputs.branch }}|g" docker-compose.portainer.yml
+
+      - name: Deploy to Portainer
+        env:
+          STACK_NAME: ${{ github.event.inputs.stack_name || 'opencode' }}
+          ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }}
+        run: |
+          curl -X POST "${PORTAINER_URL}/api/stacks/endpoint/1/dockerfile/upsert" \
+            -H "Authorization: Bearer ${PORTAINER_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "Name": "'"$STACK_NAME"'-'"$ENVIRONMENT"'",
+              "StackFileContent": "$(cat docker-compose.portainer.yml)",
+              "Env": [
+                "TZ=Europe/Berlin",
+                "OPENCODE_SERVER_USERNAME=opencode",
+                "OPENCODE_SERVER_PASSWORD=${{ secrets.OPENCODE_SERVER_PASSWORD }}",
+                "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}",
+                "LOCAL_ENDPOINT=${{ secrets.LOCAL_ENDPOINT }}",
+                "CUSTOM_OPENAI_ENDPOINT=${{ secrets.CUSTOM_OPENAI_ENDPOINT }}",
+                "CUSTOM_MCP_ENDPOINT=${{ secrets.CUSTOM_MCP_ENDPOINT }}",
+                "REGISTRY_IMAGE=${REGISTRY}/${IMAGE_NAME}:${{ steps.branch-name.outputs.branch }}"
+              ]
+            }'
+
+      - name: Trigger stack deployment
+        if: success()
+        run: |
+          curl -X POST "${PORTAINER_URL}/api/stacks/1/deploy" \
+            -H "Authorization: Bearer ${PORTAINER_TOKEN}" \
+            -H "Content-Type: application/json"
+
+  health-check:
+    needs: deploy-stack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for service to be healthy
+        run: |
+          for i in {1..30}; do
+            if curl -f http://${{ secrets.PORTAINER_HOST || 'localhost' }}:8076/ > /dev/null 2>&1; then
+              echo "Service is healthy!"
+              exit 0
+            fi
+            echo "Waiting for service to be healthy... ($i/30)"
+            sleep 10
+          done
+          echo "Service did not become healthy in time"
+          exit 1
