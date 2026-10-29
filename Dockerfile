@@ -16,11 +16,11 @@ RUN mkdir -p /root/.local/share/opencode /workspace
 WORKDIR /workspace
 
 # Expose port
-EXPOSE 4096
+EXPOSE 8076
 
 # Health check: any HTTP response (incl. 401 auth-required) means the server is up
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD curl -s -o /dev/null http://localhost:4096/ || exit 1
+  CMD curl -s -o /dev/null http://localhost:8076/ || exit 1
 
 # Start command
-CMD ["sh", "-c", "opencode web --port 4096 --hostname 0.0.0.0"]
+CMD ["sh", "-c", "opencode web --port 8076 --hostname 0.0.0.0"]

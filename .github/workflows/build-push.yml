@@ -1,14 +1,23 @@
-name: Build & Push image to GHCR
+name: Build & Push Docker image to GHCR
 
 on:
   push:
     branches: [master, main]
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      build_file:
+        description: 'Dockerfile to build'
+        required: true
+        default: 'Dockerfile'
+        type: choice
+        options:
+          - Dockerfile
+          - Dockerfile.gui
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/${{ 'hai.opencodcontainer' }}
+  IMAGE_NAME: ${{ github.repository_owner }}/hai.opencodecontainer
 
 jobs:
   build-push:
@@ -37,11 +46,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.gui
+          file: ${{ github.event.inputs.build_file || 'Dockerfile' }}
           push: true
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
           labels: |
             org.opencontainers.image.source=${{ github.repositoryUrl }}
             org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ github.event.timestamp }}
