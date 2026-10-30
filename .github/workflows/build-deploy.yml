@@ -81,10 +81,9 @@ jobs:
       - name: Update Docker Compose Files
         run: |
           if [ "${{ github.event.inputs.build_file }}" == "Dockerfile.mcp" ] || [ "${{ github.event.inputs.build_file }}" == "" ]; then
-            # Update docker-compose.yml and docker-compose.portainer.yml to use MCP image
-            sed -i "s|ghcr\.io/jbkunama1/hai\.opencodecontainer:latest|ghcr.io/jbkunama1/hai.opencodecontainer:latest|g" docker-compose.yml docker-compose.portainer.yml
-            sed -i "s|jbcrypt ${{ github.repository }}:latest|ghcr.io/${{ github.repository }}:latest|g" README.md
-            git add docker-compose.yml docker-compose.portainer.yml README.md
+            # Update docker-compose.yml and docker-compose.portainer.yml to use latest image
+            sed -i "s|ghcr\.io/jbkunama1/hai\.opencodecontainer:.*|ghcr.io/jbkunama1/hai.opencodecontainer:${{ github.sha }}|g" docker-compose.yml docker-compose.portainer.yml
+            git add docker-compose.yml docker-compose.portainer.yml
             git commit -m "ci: Update docker-compose files to use latest image" || true
             git push origin main || true
           fi
