@@ -139,6 +139,76 @@ Bei jedem Push auf `master`/`main`:
 - Der Port wurde von 4096 auf 8076 geändert
 - Nutze `docker-compose.portainer.yml` für Portainer Deployment
 
+## 🔌 Custom MCP Server Integration
+
+OpenCode kann mit einem eigenen MCP Server über `CUSTOM_MCP_ENDPOINT` konfiguriert werden.
+
+### MCP Server Features
+
+Der MCP Server beinhaltet:
+- 🔐 **JWT Token Authentication** - Sicherheitssteuerung
+- 📋 **MCP 1.0 Protocol** - Vollständig kompatibel
+- 🛡️ **Health Check** - Port 9001
+- 🔑 **Token Management** - Auto-Erstellung und Ablauf
+
+### Deployment mit MCP Server
+
+**Option 1: Eigenständiger MCP Server**
+```bash
+docker-compose -f docker-compose.yml up -d --build mcp-server
+```
+
+**Option 2: Integrierter MCP Server in OpenCode**
+```bash
+docker-compose -f docker-compose.mcp.yml up -d
+```
+
+Die integrierte Version startet OpenCode und den MCP Server zusammen.
+
+### MCP API Nutzung
+
+**Token erstellen:**
+```bash
+curl -X POST http://localhost:9000/mcp \
+  -H "Authorization: Bearer CREATE_TOKEN" | jq -r '.token'
+```
+
+**Chat via MCP:**
+```bash
+curl -X POST http://localhost:9000/mcp \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "chat",
+    "params": {
+      "message": "Hallo OpenCode!"
+    }
+  }'
+```
+
+**MCP Tools auflisten:**
+```bash
+curl -X POST http://localhost:9000/mcp \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools.list"
+  }'
+```
+
+### MCP Secret Key
+
+Optional für zusätzliche Sicherheit:
+```bash
+OPENCODE_MCP_SECRET_KEY=dein-sicheres-secret-key-xyz
+```
+
+Wenn nicht gesetzt, wird automatisch ein zufälliger Secret Key generiert.
+
 ## 🦈 Network
 
 Das Setup nutzt das externe Docker-Netzwerk `highfishNetwork`.

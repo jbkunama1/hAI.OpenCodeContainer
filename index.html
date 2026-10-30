@@ -137,7 +137,7 @@
 <body>
     <div class="container">
         <h1>🦈 hAI.OpenCodeContainer</h1>
-        <p class="subtitle">Docker Setup für OpenCode mit Auto-Build</p>
+                <p class="subtitle">Docker Setup für OpenCode mit Auto-Build & MCP Server</p>
         
         <div class="info-box">
             <h2>🔄 Auto-Build Pipeline</h2>
@@ -174,6 +174,16 @@
             <div class="code">ghcr.io/jbkunama1/hai.opencodecontainer:latest</div>
         </div>
 
+                <div class="info-box">
+                    <h2>🔐 MCP Server Integration</h2>
+                    <p>OpenCode kann über einen MCP Server gesteuert werden:</p>
+                    <div class="code">CUSTOM_MCP_ENDPOINT=http://localhost:9000</div>
+                    <p>Mit JWT-geschützter API:</p>
+                    <div class="code">Port 8076: OpenCode Web UI</div>
+                    <div class="code">Port 9000: MCP Server API</div>
+                    <div class="code">Port 9001: Health Check</div>
+                </div>
+
         <div class="features">
             <div class="feature">
                 <div class="feature-icon">🤖</div>
@@ -181,31 +191,41 @@
                 <p>OpenAI-kompatible API</p>
             </div>
             <div class="feature">
-                <div class="feature-icon">🐙</div>
-                <h3>GitHub MCP</h3>
-                <p>Repository Integration</p>
+                        <div class="feature-icon">🔐</div>
+                        <h3>MCP Server</h3>
+                        <p>Token-geschützt</p>
             </div>
             <div class="feature">
-                <div class="feature-icon">⚙️</div>
-                <h3>Auto-Build</h3>
-                <p>GitHub Actions CI/CD</p>
+                        <div class="feature-icon">🐙</div>
+                        <h3>GitHub MCP</h3>
+                        <p>Repository Integration</p>
             </div>
             <div class="feature">
-                <div class="feature-icon">📦</div>
-                <h3>GHCR</h3>
-                <p>Container Registry</p>
+                        <div class="feature-icon">⚙️</div>
+                        <h3>Auto-Build</h3>
+                        <p>GitHub Actions CI/CD</p>
             </div>
             <div class="feature">
-                <div class="feature-icon">🔐</div>
-                <h3>Basic Auth</h3>
-                <p>Username + Password</p>
+                        <div class="feature-icon">📦</div>
+                        <h3>GHCR</h3>
+                        <p>Container Registry</p>
             </div>
             <div class="feature">
-                <div class="feature-icon">🦈</div>
-                <h3>highfishNetwork</h3>
-                <p>Isoliertes Netzwerk</p>
+                        <div class="feature-icon">🔒</div>
+                        <h3>Basic Auth</h3>
+                        <p>Username + Password</p>
             </div>
-        </div>
+                    <div class="feature">
+                        <div class="feature-icon">🦈</div>
+                        <h3>highfishNetwork</h3>
+                        <p>Isoliertes Netzwerk</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Health Check</h3>
+                        <p>Port 9001</p>
+                    </div>
+                </div>
 
         <div class="links">
             <a href="https://github.com/jbkunama1/hAI.OpenCodeContainer" class="btn">📦 GitHub Repo</a>

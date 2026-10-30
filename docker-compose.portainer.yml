@@ -24,6 +24,25 @@ services:
     networks:
       - highfishNetwork
 
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
+    container_name: opencode-mcp
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - TZ=Europe/Berlin
+      - OPENCODE_MCP_SECRET_KEY=${OPENCODE_MCP_SECRET_KEY:-your-secret-key-here}
+      - OPENCODE_MCP_PORT=9000
+      - OPENCODE_MCP_HEALTH_PORT=9001
+    volumes:
+      - opencode_mcp_data:/app/data
+    networks:
+      - highfishNetwork
+
 networks:
   highfishNetwork:
     external: true
@@ -31,3 +50,4 @@ networks:
 volumes:
   opencode_data:
   opencode_projects:
+  opencode_mcp_data:
