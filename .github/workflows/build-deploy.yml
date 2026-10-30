@@ -9,15 +9,16 @@ on:
       build_file:
         description: 'Dockerfile to build'
         required: true
-        default: 'Dockerfile'
+        default: 'Dockerfile.mcp'
         type: choice
         options:
           - Dockerfile
           - Dockerfile.gui
+          - Dockerfile.mcp
       environment:
         description: 'Environment (dev/staging/prod)'
         required: true
-        default: 'dev'
+        default: 'prod'
         type: choice
         options:
           - dev
@@ -70,9 +71,20 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ${{ github.event.inputs.build_file || 'Dockerfile' }}
+          file: ${{ github.event.inputs.build_file || 'Dockerfile.mcp' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Update Docker Compose Files
+        run: |
+          if [ "${{ github.event.inputs.build_file }}" == "Dockerfile.mcp" ] || [ "${{ github.event.inputs.build_file }}" == "" ]; then
+            # Update docker-compose.yml and docker-compose.portainer.yml to use MCP image
+            sed -i "s|jbcrypt ${{ github.repository }}:latest|ghcr.io/${{ github.repository }}:latest|g" docker-compose.yml docker-compose.portainer.yml
+            sed -i "s|jbcrypt ${{ github.repository }}:latest|ghcr.io/${{ github.repository }}:latest|g" README.md
+            git add docker-compose.yml docker-compose.portainer.yml README.md
+            git commit -m "ci: Update docker-compose files to use latest image" || true
+            git push origin main || true
+          fi
