@@ -16,6 +16,12 @@ from datetime import datetime, timedelta
 import threading
 import time
 
+# JWT error handling
+try:
+    from jwt.exceptions import PyJWTError
+except ImportError:
+    PyJWTError = Exception
+
 # Configuration
 SECRET_KEY = os.environ.get('OPENCODE_MCP_SECRET_KEY', secrets.token_urlsafe(32))
 TOKEN_EXPIRY = 3600  # 1 hour
@@ -51,7 +57,7 @@ class MCPHandler(BaseHTTPRequestHandler):
             if datetime.utcnow() > datetime.fromtimestamp(payload['exp']):
                 return None
             return payload
-        except jwt.PymtError:
+        except PyJWTError:
             return None
     
     def _generate_token(self, user_id='opencode'):
