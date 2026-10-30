@@ -2,12 +2,16 @@ version: "3.8"
 
 services:
   opencode:
-      image: ghcr.io/jbkunama1/hai.opencodecontainer:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.mcp
     container_name: opencode
     restart: unless-stopped
-    command: sh -c "opencode web --port 8076 --hostname 0.0.0.0"
+    command: sh -c "python3 /app/mcp_server.py & opencode web --port 8076 --hostname 0.0.0.0"
     ports:
       - "8076:8076"
+      - "9000:9000"
+      - "9001:9001"
     environment:
       - TZ=Europe/Berlin
       - OPENCODE_SERVER_USERNAME=opencode
@@ -16,30 +20,14 @@ services:
       - LOCAL_ENDPOINT=${LOCAL_ENDPOINT:-http://localhost:8000/v1}
       - CUSTOM_OPENAI_ENDPOINT=${CUSTOM_OPENAI_ENDPOINT:-http://localhost:8000/v1}
       - CUSTOM_MCP_ENDPOINT=${CUSTOM_MCP_ENDPOINT:-http://localhost:9000}
+      - OPENCODE_MCP_SECRET_KEY=${OPENCODE_MCP_SECRET_KEY:-your-secret-key-here}
+      - OPENCODE_MCP_PORT=9000
+      - OPENCODE_MCP_HEALTH_PORT=9001
       - OPENCODE_CONFIG_CONTENT={"$schema":"https://opencode.ai/config.json","server":{"port":8076,"hostname":"0.0.0.0"},"provider":{"openai":{"options":{"apiKey":"${OPENAI_API_KEY}","baseURL":"${LOCAL_ENDPOINT}"}},"custom_openai":{"options":{"apiKey":"${OPENAI_API_KEY}","baseURL":"${CUSTOM_OPENAI_ENDPOINT}"}},"custom_mcp":{"options":{"endpoint":"${CUSTOM_MCP_ENDPOINT}"}}},"enabled_providers":["openai","custom_openai"],"snapshot":false,"autoupdate":false,"mcp":{"github":{"enabled":true,"repositories":["jbkunama1/*"]},"custom":{"enabled":true,"endpoint":"${CUSTOM_MCP_ENDPOINT}"}}}
     volumes:
       - opencode_data:/root/.local/share/opencode
       - opencode_projects:/workspace
     working_dir: /workspace
-    networks:
-      - highfishNetwork
-
-  mcp-server:
-    build:
-      context: .
-      dockerfile: Dockerfile.mcp
-    container_name: opencode-mcp
-    restart: unless-stopped
-    ports:
-      - "9000:9000"
-      - "9001:9001"
-    environment:
-      - TZ=Europe/Berlin
-      - OPENCODE_MCP_SECRET_KEY=${OPENCODE_MCP_SECRET_KEY:-your-secret-key-here}
-      - OPENCODE_MCP_PORT=9000
-      - OPENCODE_MCP_HEALTH_PORT=9001
-    volumes:
-      - opencode_mcp_data:/app/data
     networks:
       - highfishNetwork
 
@@ -50,4 +38,3 @@ networks:
 volumes:
   opencode_data:
   opencode_projects:
-  opencode_mcp_data:
