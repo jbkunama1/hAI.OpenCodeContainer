@@ -2,7 +2,9 @@ version: "3.8"
 
 services:
   opencode:
-    image: ghcr.io/jbkunama1/hai.opencodecontainer:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: opencode
     restart: unless-stopped
     command: sh -c "opencode web --port 8076 --hostname 0.0.0.0"
