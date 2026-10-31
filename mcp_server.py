@@ -24,7 +24,7 @@ except ImportError:
 
 # Configuration
 SECRET_KEY = os.environ.get('OPENCODE_MCP_SECRET_KEY', secrets.token_urlsafe(32))
-TOKEN_EXPIRY = 2592000  # 30 days, very long expiry
+TOKEN_EXPIRY = 31536000  # 1 year, essentially unlimited
 MCP_PORT = int(os.environ.get('MCP_PORT', 9000))
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
 
