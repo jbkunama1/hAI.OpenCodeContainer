@@ -137,7 +137,7 @@
 <body>
     <div class="container">
         <h1>🦈 hAI.OpenCodeContainer</h1>
-                <p class="subtitle">Docker Setup für OpenCode mit Auto-Build & MCP Server</p>
+                        <p class="subtitle">Docker Setup für OpenCode mit Auto-Build & integriertem MCP Server</p>
         
         <div class="info-box">
             <h2>🔄 Auto-Build Pipeline</h2>
@@ -176,13 +176,14 @@
 
                 <div class="info-box">
                     <h2>🔐 MCP Server Integration</h2>
-                    <p>OpenCode kann über einen MCP Server gesteuert werden:</p>
+                                    <p>OpenCode mit integriertem MCP Server und JWT Authentication:</p>
                     <div class="code">CUSTOM_MCP_ENDPOINT=http://localhost:9000</div>
-                    <p>Mit JWT-geschützter API:</p>
+                                    <p>Drei Service Ports:</p>
                     <div class="code">Port 8076: OpenCode Web UI</div>
                     <div class="code">Port 9000: MCP Server API</div>
                     <div class="code">Port 9001: Health Check</div>
-                </div>
+                                    <p>Mit Token-basierter Authentifizierung</p>
+                                </div>
 
         <div class="features">
             <div class="feature">
@@ -193,7 +194,7 @@
             <div class="feature">
                         <div class="feature-icon">🔐</div>
                         <h3>MCP Server</h3>
-                        <p>Token-geschützt</p>
+                                <p>Integriert + JWT Auth</p>
             </div>
             <div class="feature">
                         <div class="feature-icon">🐙</div>
@@ -223,9 +224,19 @@
                     <div class="feature">
                         <div class="feature-icon">🔍</div>
                         <h3>Health Check</h3>
-                        <p>Port 9001</p>
+                                <p>Ports 8076, 9000, 9001</p>
                     </div>
-                </div>
+                            <div class="feature">
+                                <div class="feature-icon">🔄</div>
+                                <h3>Auto-Deploy</h3>
+                                <p>Portainer Integration</p>
+                            </div>
+                            <div class="feature">
+                                <div class="feature-icon">🛡️</div>
+                                <h3>JWT Token</h3>
+                                <p>1 Stunde Gültigkeit</p>
+                            </div>
+                        </div>
 
         <div class="links">
             <a href="https://github.com/jbkunama1/hAI.OpenCodeContainer" class="btn">📦 GitHub Repo</a>

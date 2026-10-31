@@ -1,6 +1,6 @@
 # hAI.OpenCodeContainer
 
-Docker Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Editor mit Auto-Build via GitHub Actions, Unterstützung für eigene OpenAI-kompatible LLMs und MCP Server.
+Docker Setup für [OpenCode](https://opencode.ai) - AI-Powered Code Editor mit Auto-Build via GitHub Actions, Unterstützung für eigene OpenAI-kompatible LLMs und integriertem MCP Server mit JWT Authentication.
 
 ## 🏗️ Architektur
 
@@ -121,7 +121,7 @@ Bei jedem Push auf `master`/`main`:
 - ✅ OpenAI-kompatible API Integration (Multi-Endpoint)
 - ✅ GitHub MCP Support (jbkunama1/*)
 - ✅ Eigener OpenAI-kompatibler LLM Support
-- ✅ Eigener MCP Server Support
+- ✅ **Integrierter MCP Server** mit JWT Authentication
 - ✅ Auto-Build via GitHub Actions
 - ✅ Auto-Deploy bei Merge
 - ✅ GHCR Image Registry
@@ -129,7 +129,9 @@ Bei jedem Push auf `master`/`main`:
 - ✅ Basic Auth (Username/Password)
 - ✅ highfishNetwork Integration
 - ✅ Persistent Data Storage
-- ✅ Health Check & Monitoring
+- ✅ Health Check & Monitoring (Ports 8076, 9000, 9001)
+- ✅ Docker Compose & Portainer Support
+- ✅ Fehlerbehandlung für JWT Token Validation
 
 ## 📝 Notes
 
@@ -139,31 +141,30 @@ Bei jedem Push auf `master`/`main`:
 - Der Port wurde von 4096 auf 8076 geändert
 - Nutze `docker-compose.portainer.yml` für Portainer Deployment
 
-## 🔌 Custom MCP Server Integration
+## 🔌 MCP Server Integration
 
-OpenCode kann mit einem eigenen MCP Server über `CUSTOM_MCP_ENDPOINT` konfiguriert werden.
+Der MCP Server ist jetzt **integriert** in den OpenCode-Container und läuft zusammen mit der OpenCode Web UI.
 
 ### MCP Server Features
 
-Der MCP Server beinhaltet:
 - 🔐 **JWT Token Authentication** - Sicherheitssteuerung
 - 📋 **MCP 1.0 Protocol** - Vollständig kompatibel
 - 🛡️ **Health Check** - Port 9001
-- 🔑 **Token Management** - Auto-Erstellung und Ablauf
+- 🔑 **Token Management** - Auto-Erstellung und Ablauf (1 Stunde Gültigkeit)
+- 🔧 **Fehlerbehandlung** - Robuste JWT Token Validation
 
-### Deployment mit MCP Server
+### Deployment
 
-**Option 1: Eigenständiger MCP Server**
+Der MCP Server ist **integriert** in den OpenCode Container. Deployment erfolgt über Portainer mit dem `docker-compose.portainer.yml` Stack:
+
 ```bash
-docker-compose -f docker-compose.yml up -d --build mcp-server
+# In Portainer
+1. Stack hinzufügen
+2. Repository URL: https://github.com/jbkunama1/hAI.OpenCodeContainer.git
+3. Stack file: docker-compose.portainer.yml
+4. Environment Variables eintragen
+5. Deploy Stack
 ```
-
-**Option 2: Integrierter MCP Server in OpenCode**
-```bash
-docker-compose -f docker-compose.mcp.yml up -d
-```
-
-Die integrierte Version startet OpenCode und den MCP Server zusammen.
 
 ### MCP API Nutzung
 
