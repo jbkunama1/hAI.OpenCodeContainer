@@ -150,7 +150,7 @@ Der MCP Server ist jetzt **integriert** in den OpenCode-Container und läuft zus
 - 🔐 **JWT Token Authentication** - Sicherheitssteuerung
 - 📋 **MCP 1.0 Protocol** - Vollständig kompatibel
 - 🛡️ **Health Check** - Port 9001
-- 🔑 **Token Management** - Auto-Erstellung (unbegrenzte Gültigkeit)
+- 🔑 **Token Management** - Auto-Erstellung (kein Ablaufdatum)
 - 🔧 **Fehlerbehandlung** - Robuste JWT Token Validation
 
 ### Deployment

@@ -24,7 +24,7 @@ except ImportError:
 
 # Configuration
 SECRET_KEY = os.environ.get('OPENCODE_MCP_SECRET_KEY', secrets.token_urlsafe(32))
-TOKEN_EXPIRY = 31536000  # 1 year, essentially unlimited
+# TOKEN_EXPIRY removed - tokens have unlimited validity
 MCP_PORT = int(os.environ.get('MCP_PORT', 9000))
 LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
 
@@ -46,25 +46,21 @@ class MCPHandler(BaseHTTPRequestHandler):
         self.wfile.write(content.encode())
     
     def _validate_token(self, auth_header):
-        """Validate JWT token"""
-        if not auth_header or not auth_header.startswith('Bearer '):
-            return None
-        
-        token = auth_header[7:]  # Remove 'Bearer ' prefix
-        try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-            # Check if token is expired
-            if datetime.utcnow() > datetime.fromtimestamp(payload['exp']):
+            """Validate JWT token (no expiry check)"""
+            if not auth_header or not auth_header.startswith('Bearer '):
                 return None
-            return payload
-        except PyJWTError:
-            return None
+        
+            token = auth_header[7:]  # Remove 'Bearer ' prefix
+            try:
+                payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'], options={"verify_exp": False})
+                return payload
+            except PyJWTError:
+                return None
     
     def _generate_token(self, user_id='opencode'):
-        """Generate JWT token"""
+        """Generate JWT token without expiry"""
         payload = {
             'user': user_id,
-            'exp': datetime.utcnow() + timedelta(seconds=TOKEN_EXPIRY),
             'iat': datetime.utcnow()
         }
         return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
